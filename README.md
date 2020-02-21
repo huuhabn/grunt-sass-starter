@@ -54,7 +54,7 @@ ProjectRoot/
 │       ├── css/
 │       ├── js/
 │       ├── plugins/
-│       ├── vendor/
+│       └── vendor/
 │
 ├── Gruntfile.js
 ├── package.json
@@ -69,7 +69,7 @@ ProjectRoot/
 
 **`css/`** —
 
-`sass/global.scss` will be compiled too `css/<package-name>.css`. Import all project Sass files in this file.
+`sass/css/app.scss` will be compiled too `css/<package-name>.css`. Import all project Sass files in this file.
 
 **`img/`** —
 
