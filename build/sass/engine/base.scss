@@ -1,7 +1,8 @@
 /*
-  Base
-*/
-
+ * -------------------------------------------
+ * Base
+ * -------------------------------------------
+ */
 body{
   background: white; // Change to $color-primary
   margin: 0;
@@ -9,5 +10,5 @@ body{
   color: $color-primary;
 }
 h1{
-  color: red;
+  color: blue;
 }

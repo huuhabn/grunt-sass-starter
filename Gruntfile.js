@@ -81,8 +81,6 @@ module.exports = function (grunt) {
             dev: {
                 options: {
                     style: 'expanded',
-                    trace: true,
-                    debugInfo: true
                 },
                 files: {
                     '<%= dist_dir %>/css/<%= pkg.name %>.css': [
