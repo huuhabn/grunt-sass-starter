@@ -33,6 +33,7 @@ module.exports = function (grunt) {
                 }
             }
         },
+        dist_dir:'assets/',
         /**
          * JSHint
          * @github.com/gruntjs/grunt-contrib-jshint
@@ -43,7 +44,7 @@ module.exports = function (grunt) {
             },
             all: [
                 'build/js/**/*.js',
-                '!assets/js/<%= pkg.name %>.js',
+                '!<%= dist_dir %>/js/<%= pkg.name %>.js',
             ]
         },
         /**
@@ -56,12 +57,12 @@ module.exports = function (grunt) {
                 banner: '<%= banner %>'
                 + '// Make sure jQuery has been loaded\n'
                 + 'if (typeof jQuery === \'undefined\') {\n'
-                + 'throw new Error(\'<%= pkg.name %> requires jQuery\')\n'
+                + '    throw new Error(\'<%= pkg.name %> requires jQuery\')\n'
                 + '}\n\n'
             },
             js: {
                 src: ['build/js/**/*.js'],
-                dest: 'assets/js/<%= pkg.name %>.js'
+                dest: '<%= dist_dir %>/js/<%= pkg.name %>.js'
             },
         },
         /**
@@ -72,7 +73,7 @@ module.exports = function (grunt) {
             // Minify js files in js/src/
             dist: {
                 src: ['<%= concat.js.dest %>'],
-                dest: 'assets/js/<%= pkg.name %>.min.js'
+                dest: '<%= dist_dir %>/js/<%= pkg.name %>.min.js'
             },
         },
         sass: {
@@ -84,7 +85,7 @@ module.exports = function (grunt) {
                     debugInfo: true
                 },
                 files: {
-                    'assets/css/<%= pkg.name %>.css': [
+                    '<%= dist_dir %>/css/<%= pkg.name %>.css': [
                         'build/sass/app.scss'
                     ]
                 }
@@ -96,7 +97,7 @@ module.exports = function (grunt) {
                     sourcemap: false
                 },
                 files: {
-                    'assets/css/<%= pkg.name %>.min.css': [
+                    '<%= dist_dir %>/css/<%= pkg.name %>.min.css': [
                         'build/sass/app.scss'
                     ]
                 }
@@ -118,7 +119,7 @@ module.exports = function (grunt) {
                     expand: true, // Enable dynamic expansion.
                     cwd: 'build/img/', // Src matches are relative to this path.
                     src: ['**/*.svg'], // Actual pattern(s) to match.
-                    dest: 'assets/img/', // Destination path prefix.
+                    dest: '<%= dist_dir %>/img/', // Destination path prefix.
                 }],
             }
         },
@@ -135,7 +136,7 @@ module.exports = function (grunt) {
                         expand: true,
                         cwd: 'build/img/',
                         src: ['**/*.{png,jpg,gif,svg,jpeg}'],
-                        dest: 'assets/img/'
+                        dest: '<%= dist_dir %>/img/'
                     }
                 ]
             }
