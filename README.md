@@ -4,6 +4,7 @@
 If you know what you're doing, simply clone the repo.
 
 Enjoy.
+
 ### What's included?
 - JShint, concatenate and minify JavaScript
 - Compiles Sass with development and production options
@@ -30,15 +31,15 @@ For more information on Grunt, see the [Getting Started](http://gruntjs.com/gett
 ProjectRoot/
 │
 ├── build/
-│   ├── app.min.css
-│   │   └── app.min.css.map
-│   └── app.min.js/
-│       └── app.min.js.map
+│   ├── <package-name>.min.css
+│   │   └── <package-name>.min.css.map
+│   └── <package-name>.min.js/
+│       └── <package-name>.min.js.map
 │
 ├── js/
 │   ├── plugins/
 │   ├── vendor/
-│   └── app.js
+│   └── <package-name>.js
 │
 ├── sass/
 │   ├── components/
@@ -54,8 +55,6 @@ ProjectRoot/
 │   │   ├── header.scss
 │   │   └── main.scss
 │   └── app.scss
-│
-├── app.scss
 │
 ├── Gruntfile.js
 ├── package.json
@@ -122,7 +121,7 @@ JShint, concatenate and minify JS. Compile Sass with production settings (CSS is
 
 Convert any images in `img/` from SVG to PNG. Also compress `.jpg`, `.jpeg` and  `.png` files.
 
-`grunt watch` —
+`grunt dev` —
 
 Watches files for changes and JShint, concatenate and minifies JS. Compiles Sass with development settings and reloads the page (requires the livereload browser plugin). Use `ctrl + c` to stop watching.
 

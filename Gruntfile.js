@@ -1,39 +1,95 @@
 'use strict';
-const sass = require('node-sass');
 module.exports = function (grunt) {
 
     grunt.initConfig({
+        pkg: grunt.file.readJSON('package.json'),
+        /**
+         * Set banner
+         */
+        banner: '/**\n' +
+            '<%= pkg.name %> - <%= pkg.version %>\n' +
+            '<%= pkg.homepage %>\n' +
+            'Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author.name %>\n' +
+            'License: <%= pkg.license %>\n' +
+            '*/\n',
         notify: {
             sass: {
                 options: {
-                    title  : '<%= pkg.name %>',
+                    title: '<%= pkg.name %>',
                     message: 'Sass Compiler finished'
                 }
             },
-            js  : {
+            js: {
                 options: {
-                    title  : '<%= pkg.name %>',
+                    title: '<%= pkg.name %>',
                     message: 'JS Compiler finished'
                 }
             },
-            concat  : {
+            concat: {
                 options: {
-                    title  : '<%= pkg.name %>',
+                    title: '<%= pkg.name %>',
                     message: 'CONCAT finished'
                 }
             }
         },
+        /**
+         * JSHint
+         * @github.com/gruntjs/grunt-contrib-jshint
+         */
         jshint: {
             options: {
                 jshintrc: '.jshintrc'
             },
             all: [
-                'Gruntfile.js',
                 'assets/js/**/*.js',
-                '!assets/build/app.min.js'
+                '!assets/js/<%= pkg.name %>.js',
+                '!assets/js/<%= pkg.name %>.min.js',
+                '!assets/js/<%= pkg.name %>.min.js.map'
             ]
         },
+        /**
+         * Concatenate
+         * @github.com/gruntjs/grunt-contrib-concat
+         */
+        concat: {
+            options: {
+                stripBanners: true,
+                banner: '<%= banner %>'
+                + '// Make sure jQuery has been loaded\n'
+                + 'if (typeof jQuery === \'undefined\') {\n'
+                + 'throw new Error(\'<%= pkg.name %> requires jQuery\')\n'
+                + '}\n\n'
+            },
+            js: {
+                src: ['build/js/**/*.js', '!build/js/app.js'],
+                dest: 'assets/js/<%= pkg.name %>.js'
+            },
+        },
+        /**
+         * Minify
+         * @github.com/gruntjs/grunt-contrib-uglify
+         */
+        uglify: {
+            // Minify js files in js/src/
+            dist: {
+                src: ['<%= concat.js.dest %>'],
+                dest: 'assets/js/<%= pkg.name %>.min.js'
+            },
+        },
         sass: {
+            // Development options
+            dev: {
+                options: {
+                    style: 'expanded',
+                    trace: true,
+                    debugInfo: true
+                },
+                files: {
+                    'assets/css/<%= pkg.name %>.css': [
+                        'build/sass/app.scss'
+                    ]
+                }
+            },
             dist: {
                 options: {
                     style: 'compressed',
@@ -41,23 +97,61 @@ module.exports = function (grunt) {
                     sourcemap: false
                 },
                 files: {
-                    'assets/build/app.min.css': [
-                        'assets/sass/app.scss'
+                    'assets/css/<%= pkg.name %>.min.css': [
+                        'build/sass/app.scss'
                     ]
                 }
             }
         },
-        uglify: {
+        /**
+         * Minify .svg
+         * @github.com/sindresorhus/grunt-svgmin
+         */
+        svgmin: {
+            options: {
+                plugins: [{
+                    // Prevent removing the viewBox attr. Previously caused issues in IE9+.
+                    removeViewBox: false
+                }]
+            },
             dist: {
-                files: {
-                    'assets/build/app.min.js': [
-                        'assets/js/app.js'
-                    ]
-                },
-                options: {
-                    sourceMap: 'assets/build/app.min.js.map',
-                    sourceMappingURL: '/assets/build/app.min.js.map'
-                }
+                files: [{
+                    expand: true, // Enable dynamic expansion.
+                    cwd: 'build/img/', // Src matches are relative to this path.
+                    src: ['**/*.svg'], // Actual pattern(s) to match.
+                    dest: 'assets/img/', // Destination path prefix.
+                }],
+            }
+        },
+
+        /**
+         * Compress .jpg/.png
+         * @github.com/gruntjs/grunt-image
+         */
+        // Optimize images
+        image: {
+            dynamic: {
+                files: [
+                    {
+                        expand: true,
+                        cwd: 'build/img/',
+                        src: ['**/*.{png,jpg,gif,svg,jpeg}'],
+                        dest: 'assets/img/'
+                    }
+                ]
+            }
+        },
+
+
+        /**
+         * Convert .svg to .png
+         * @github.com/dbushell/grunt-svg2png
+         */
+        svg2png: {
+            dist: {
+                files: [{
+                    src: ['build/img/**/*.svg'],
+                }],
             }
         },
         watch: {
@@ -66,15 +160,15 @@ module.exports = function (grunt) {
             },
             sass: {
                 files: [
-                    'assets/sass/**/*.scss'
+                    'build/sass/**/*.scss'
                 ],
-                tasks: ['sass']
+                tasks: ['sass:dev']
             },
             js: {
                 files: [
-                    'assets/js/**/*.js'
+                    'build/js/**/*.js'
                 ],
-                tasks: ['jshint', 'uglify']
+                tasks: ['jshint', 'concat:js', 'uglify']
             },
             html: {
                 files: [
@@ -83,29 +177,62 @@ module.exports = function (grunt) {
             }
         },
         clean: {
-            dist: [
-                'assets/build/app.min.css',
-                'assets/build/app.min.js'
-            ]
+            build: ['build/img/*']
         }
     });
 
     // Load tasks
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-jshint');
+    grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-sass');
     grunt.loadNpmTasks('grunt-notify');
+    grunt.loadNpmTasks('grunt-image');
+    grunt.loadNpmTasks('grunt-svgmin');
+    grunt.loadNpmTasks('grunt-svg2png');
 
-    // Register tasks
+    /**
+     * Default Task
+     * run `grunt`
+     */
     grunt.registerTask('default', [
         'clean',
-        'sass',
+        'sass:dev',
         'uglify'
     ]);
+
+    /**
+     * Development tast
+     * run `grunt dev`
+     */
     grunt.registerTask('dev', [
         'watch'
     ]);
 
+    /**
+     * Production tast, use for deploying
+     * run `grunt production`
+     */
+    grunt.registerTask('production', [
+        'clear',
+        'jshint',           // JShint
+        'concat:js',        // Concatenate main JS files
+        'uglify',           // Minifiy concatenated JS file
+        'sass:dist',        // Compile Sass with distribution settings
+        'svg2png',          // Convert svg files to png
+        'svgmin',           // Compress svg files
+        'image',         // Compress jpg/jpeg + png files
+    ]);
+
+    /**
+     * Image Tasks
+     * run `grunt images`
+     */
+    grunt.registerTask('images', [
+        'svg2png',          // Convert svg files to png
+        'svgmin',           // Compress svg files
+        'image',         // Compress jpg/jpeg + png files
+    ]);
 };
