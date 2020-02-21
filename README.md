@@ -31,30 +31,30 @@ For more information on Grunt, see the [Getting Started](http://gruntjs.com/gett
 ProjectRoot/
 │
 ├── build/
-│   ├── <package-name>.min.css
-│   │   └── <package-name>.min.css.map
-│   └── <package-name>.min.js/
-│       └── <package-name>.min.js.map
-│
-├── js/
-│   ├── plugins/
-│   ├── vendor/
-│   └── <package-name>.js
-│
-├── sass/
-│   ├── components/
-│   ├── engine/
-│   │   ├── base.scss
-│   │   ├── mixins.scss
-│   │   ├── typography.scss
-│   │   └── variables.scss
-│   ├── pages/
-│   ├── plugins/
-│   ├── sections/
-│   │   ├── footer.scss
-│   │   ├── header.scss
-│   │   └── main.scss
-│   └── app.scss
+│   ├── sass/
+│   │   ├── engine/
+|   |   |   ├── base.scss
+|   |   |   ├── mixins.scss
+|   |   |   ├── typography.scss
+|   |   |   └── variables.scss
+|   |   |   
+│   │   ├── sections/
+|   |   |   ├── header.scss
+|   |   |   ├── main.scss
+|   |   |   └── footer.scss
+│   │   |
+│   │   └── app.scss
+│   │   
+│   ├── js/
+│   |    └── app.js
+│   │   
+│   └── img/
+|
+├────assets/
+│       ├── css/
+│       ├── js/
+│       ├── plugins/
+│       ├── vendor/
 │
 ├── Gruntfile.js
 ├── package.json

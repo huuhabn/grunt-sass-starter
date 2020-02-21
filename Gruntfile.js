@@ -8,6 +8,7 @@ module.exports = function (grunt) {
          */
         banner: '/**\n' +
             '<%= pkg.name %> - <%= pkg.version %>\n' +
+            '<%= pkg.author %>\n' +
             '<%= pkg.homepage %>\n' +
             'Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author.name %>\n' +
             'License: <%= pkg.license %>\n' +
@@ -41,10 +42,8 @@ module.exports = function (grunt) {
                 jshintrc: '.jshintrc'
             },
             all: [
-                'assets/js/**/*.js',
+                'build/js/**/*.js',
                 '!assets/js/<%= pkg.name %>.js',
-                '!assets/js/<%= pkg.name %>.min.js',
-                '!assets/js/<%= pkg.name %>.min.js.map'
             ]
         },
         /**
@@ -61,7 +60,7 @@ module.exports = function (grunt) {
                 + '}\n\n'
             },
             js: {
-                src: ['build/js/**/*.js', '!build/js/app.js'],
+                src: ['build/js/**/*.js'],
                 dest: 'assets/js/<%= pkg.name %>.js'
             },
         },
